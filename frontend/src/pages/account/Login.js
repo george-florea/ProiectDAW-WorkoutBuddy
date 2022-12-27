@@ -26,25 +26,20 @@ const loginModelInitialState = {
 
 export default function Login() {
   const dispatcher = useDispatch()
-  const username = useSelector(state => state.account.username);
-
-  useEffect(() => {
-    console.log(username)
-  },[username])
   
   const [loginModel, setLoginModel] = useState(loginModelInitialState);
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    console.log(loginModel);
+
     const res = await axios({
       method: 'post',
       url: 'https://localhost:7132/UserAccount/login',
       data: loginModel
     })
-    console.log(res.data);
-    debugger;
     dispatcher(accountActions.login(res.data));
+
+    location.href = "/"
 }
 
 
