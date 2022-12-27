@@ -10,13 +10,13 @@ namespace Backend.BusinessLogic.Base
     {
         protected readonly IMapper Mapper;
         protected readonly UnitOfWork UnitOfWork;
-        //protected readonly CurrentUserDto CurrentUser;
+        protected readonly CurrentUserDto CurrentUser;
 
         public BaseService(ServiceDependencies serviceDependencies)
         {
             Mapper = serviceDependencies.Mapper;
             UnitOfWork = serviceDependencies.UnitOfWork;
-            //CurrentUser = serviceDependencies.CurrentUser;
+            CurrentUser = serviceDependencies.CurrentUser;
         }
 
         protected TResult ExecuteInTransaction<TResult>(Func<UnitOfWork, TResult> func)

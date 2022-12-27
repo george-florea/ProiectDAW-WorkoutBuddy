@@ -16,7 +16,8 @@ namespace WorkoutBuddy.BusinessLogic.Account
                 .ForMember(a => a.Email, a => a.MapFrom(s => s.Email))
                 .ForMember(a => a.Name, a => a.MapFrom(s => s.Name))
                 .ForMember(a => a.BirthDate, a => a.MapFrom(s => s.BirthDay))
-                .ForMember(a => a.Username, a => a.MapFrom(s => s.Username));
+                .ForMember(a => a.Username, a => a.MapFrom(s => s.Username))
+                .ForAllOtherMembers(a => a.Ignore());
 
             CreateMap<AddWeightModel, UserWeightHistory>()
                 .ForMember(a => a.Weight, a => a.MapFrom(s => s.Weight))

@@ -11,9 +11,10 @@ namespace Backend.Common.Exceptions
     {
         public readonly ValidationResult ValidationResult;
 
-        public ValidationErrorException(ValidationResult result)
+        public ValidationErrorException(ValidationResult result, object model)
         {
             ValidationResult = result;
+            model = model;
         }
     }
 }

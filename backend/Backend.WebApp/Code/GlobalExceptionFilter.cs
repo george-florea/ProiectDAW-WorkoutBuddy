@@ -24,16 +24,16 @@ namespace Backend.WebApp.Code
             switch (context.Exception)
             {
                 case NotFoundErrorException notFound:
-                    context.Result = new ViewResult
+                    context.Result = new ObjectResult(context.Exception.Message)
                     {
-                        ViewName = "Views/Shared/Error_NotFound.cshtml"
+                        StatusCode = StatusCodes.Status404NotFound
                     };
 
                     break;
                 case UnauthorizedAccessException unauthorizedAccess:
-                    context.Result = new ViewResult
+                    context.Result = new ObjectResult(context.Exception.Message)
                     {
-                        ViewName = "Views/Shared/Error_Unauthorized.cshtml"
+                        StatusCode = StatusCodes.Status401Unauthorized
                     };
                     break;
                 case ValidationErrorException validationError:
@@ -42,16 +42,15 @@ namespace Backend.WebApp.Code
                         context.ModelState.AddModelError(validationResult.PropertyName, validationResult.ErrorMessage);
                     }
 
-                    var descriptor = context.ActionDescriptor as ControllerActionDescriptor;
-                    context.Result = new ViewResult
+                    context.Result = new ObjectResult(validationError.ValidationResult.Errors.Select(e => new { e.PropertyName, e.ErrorMessage }))
                     {
-                        ViewName = $"Views/{descriptor.ControllerName}/{descriptor.ActionName}.cshtml"
+                        StatusCode = StatusCodes.Status412PreconditionFailed
                     };
                     break;
                 default:
-                    context.Result = new ViewResult
+                    context.Result = new ObjectResult(context.Exception.Message)
                     {
-                        ViewName = "Views/Shared/Error_InternalServerError.cshtml"
+                        StatusCode = StatusCodes.Status500InternalServerError
                     };
                     break;
 

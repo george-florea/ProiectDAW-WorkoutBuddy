@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <Folder Include="Context\" />
-    <Folder Include="Enums\" />
   </ItemGroup>
 
 </Project>
