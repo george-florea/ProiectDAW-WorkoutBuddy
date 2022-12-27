@@ -24,7 +24,7 @@ namespace Backend.WebApp.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromForm]RegisterModel model)
+        public async Task<IActionResult> Register([FromBody]RegisterModel model)
         {
             _service.RegisterNewUser(model);
 
@@ -41,7 +41,8 @@ namespace Backend.WebApp.Controllers
             return Ok(new
             {
                 token = new JwtSecurityTokenHandler().WriteToken(token),
-                expiration = token.ValidTo
+                expiration = token.ValidTo,
+                username = user.Username
             });
         }
 
@@ -62,7 +63,8 @@ namespace Backend.WebApp.Controllers
             return Ok(new
             {
                 token = new JwtSecurityTokenHandler().WriteToken(token),
-                expiration = token.ValidTo
+                expiration = token.ValidTo,
+                username = user.Username
             });
 
         }

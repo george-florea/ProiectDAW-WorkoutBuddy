@@ -3,13 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@chakra-ui/icons": "^2.0.15",
+    "@chakra-ui/react": "^2.4.5",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@reduxjs/toolkit": "^1.9.1",
     "axios": "^1.1.3",
-    "framer-motion": "^7.6.4",
+    "framer-motion": "^7.10.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-redux": "^8.0.4",
+    "react-redux": "^8.0.5",
+    "react-router": "^6.6.1",
     "react-router-dom": "^6.4.3",
-    "react-scripts": "^5.0.1"
+    "react-scripts": "^5.0.1",
+    "redux": "^4.2.0",
+    "redux-saga": "^1.2.2"
   },
   "scripts": {
     "start": "set HTTPS=true&&set SSL_CRT_FILE=./cet/cert.pem&&set SSL_KEY_FILE=./cet/key.pem&&react-scripts start",
