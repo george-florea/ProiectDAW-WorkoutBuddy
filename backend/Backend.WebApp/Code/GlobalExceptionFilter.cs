@@ -10,11 +10,11 @@ namespace Backend.WebApp.Code
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
     public sealed class GlobalExceptionFilterAttribute : ExceptionFilterAttribute
     {
-        private readonly ILogger<GlobalExceptionFilterAttribute> logger;
+        //private readonly ILogger<GlobalExceptionFilterAttribute> logger;
 
-        public GlobalExceptionFilterAttribute(ILogger<GlobalExceptionFilterAttribute> logger)
+        public GlobalExceptionFilterAttribute()//ILogger<GlobalExceptionFilterAttribute> logger)
         {
-            this.logger = logger;
+            //this.logger = logger;
         }
 
         public override void OnException(ExceptionContext context)

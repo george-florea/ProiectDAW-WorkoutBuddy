@@ -9,7 +9,7 @@ using Backend.Common.Extensions;
 using Backend.Entities;
 using Backend.Common.Exceptions;
 using System.Text.RegularExpressions;
-using WorkoutBuddy.Entities.Enums;
+using Backend.Entities.Enums;
 
 namespace Backend.BusinessLogic.Account
 {

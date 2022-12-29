@@ -8,13 +8,11 @@ namespace Backend.BusinessLogic.Base
     {
         public IMapper Mapper { get; set; }
         public UnitOfWork UnitOfWork { get; set; }
-        public CurrentUserDto CurrentUser { get; set; }
 
-        public ServiceDependencies(IMapper mapper, UnitOfWork unitOfWork, CurrentUserDto currentUser)
+        public ServiceDependencies(IMapper mapper, UnitOfWork unitOfWork)
         {
             Mapper = mapper;
             UnitOfWork = unitOfWork;
-            CurrentUser = currentUser;
         }
     }
 }

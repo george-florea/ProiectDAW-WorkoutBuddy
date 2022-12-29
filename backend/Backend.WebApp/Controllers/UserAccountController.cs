@@ -89,16 +89,14 @@ namespace Backend.WebApp.Controllers
 
         private JwtSecurityToken GetToken(List<Claim> authClaims)
         {
-            var y = _configuration["JWT:Secret"];
-            var x = Encoding.UTF8.GetBytes(y);
-            var authSigningKey = new SymmetricSecurityKey(x);
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["JWT:ValidIssuer"],
                 audience: _configuration["JWT:ValidAudience"],
-                expires: DateTime.Now.AddHours(3),
+                expires: DateTime.Now.AddDays(4),
                 claims: authClaims,
-                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha512Signature)
                 );
 
             return token;

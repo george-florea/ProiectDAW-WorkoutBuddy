@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Backend.Entities.Enums
 {
-    public enum RoleTypes : int
+    public enum Reasons
     {
-        User = 1,
-        UserOfTheWeek = 2,
-        Admin = 3
+        NewPr = 1,
+        SplitRating = 2
     }
 }

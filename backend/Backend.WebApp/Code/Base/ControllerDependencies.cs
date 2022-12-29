@@ -1,5 +1,6 @@
 ﻿
 using Backend.Common.DTOs;
+using Backend.WebApp.Code.ExtensionMethods;
 
 namespace Backend.WebApp.Code.Base
 {
@@ -7,9 +8,9 @@ namespace Backend.WebApp.Code.Base
     {
         public CurrentUserDto CurrentUser { get; set; }
 
-        public ControllerDependencies(CurrentUserDto currentUser)
+        public ControllerDependencies(HttpContext context)
         {
-            CurrentUser = currentUser;
+            CurrentUser = context.AddCurrentUser();
         }
     }
 }

@@ -22,7 +22,8 @@ import { accountActions } from "../../store/reducers/account";
 import axios from "axios";
 const Links = ["Home", "Splits", "Exercises"];
 
-const NavLink = ({ children }) => (
+const NavLink = ({ children }) => {
+  return (
   <Link
     px={2}
     py={1}
@@ -31,11 +32,11 @@ const NavLink = ({ children }) => (
       textDecoration: "none",
       bg: useColorModeValue("gray.200", "gray.700"),
     }}
-    href={"#"}
+    href={"/" + children.toLowerCase()}
   >
     {children}
   </Link>
-);
+)};
 
 export default function Header() {
   const dispatcher = useDispatch();
@@ -62,9 +63,8 @@ export default function Header() {
   return (
     <>
       <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
-        <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
-          {isLoggedIn && (
-            <>
+          {isLoggedIn ? (
+            <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
               <IconButton
                 size={"md"}
                 icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
@@ -73,7 +73,7 @@ export default function Header() {
                 onClick={isOpen ? onClose : onOpen}
               />
               <HStack spacing={8} alignItems={"center"}>
-                <Box>Logo</Box>
+                <Box>Workout Buddy</Box>
                 <HStack
                   as={"nav"}
                   spacing={4}
@@ -84,11 +84,7 @@ export default function Header() {
                   ))}
                 </HStack>
               </HStack>
-            </>
-          )}
-
-          {isLoggedIn ? (
-            <Flex alignItems={"center"}>
+              <Flex alignItems={"center"}>
               <>Hello, </>
               <Menu>
                 <MenuButton
@@ -110,7 +106,9 @@ export default function Header() {
                 </MenuList>
               </Menu>
             </Flex>
-          ) : (
+            </Flex>
+          )
+          : (
             <Flex alignItems={"flex-end"} justifyContent={"space-between"}>
               <Stack
                 flex={{ base: 1, md: 0 }}
@@ -141,8 +139,8 @@ export default function Header() {
                 </Button>
               </Stack>
             </Flex>
-          )}
-        </Flex>
+          )
+          }
 
         {isOpen ? (
           <Box pb={4} display={{ md: "none" }}>

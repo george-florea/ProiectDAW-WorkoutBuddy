@@ -4,6 +4,7 @@ import GeneralLayout from './layouts/GeneralLayout';
 import Login from './pages/account/Login';
 import Register from './pages/account/Register';
 import PrivateRoute from './pages/common/PrivateRoute';
+import ExercisesList from './pages/exercises/ExercisesList';
 import MainPage from './pages/MainPage';
 
 const router = createBrowserRouter([
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
         {
           path: 'register',
           element: <Register/>
+        },
+        {
+          path: 'exercises',
+          element: <PrivateRoute><ExercisesList/></PrivateRoute>
         }
       ]
   },
