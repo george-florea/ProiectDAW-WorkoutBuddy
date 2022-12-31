@@ -1,3 +1,4 @@
+using Backend.BusinessLogic.Base;
 using Backend.DataAccess;
 using Backend.WebApp.Code;
 using Backend.WebApp.Code.ExtensionMethods;
@@ -20,7 +21,7 @@ builder.Services.AddControllers(options =>
     options.Filters.Add(typeof(GlobalExceptionFilterAttribute));
 });
 
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddAutoMapper(typeof(Program).Assembly, typeof(BaseService).Assembly);
 
 builder.Services.AddDbContext<WorkoutBuddyDBContext>(options =>
 {

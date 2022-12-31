@@ -9,7 +9,7 @@ namespace Backend.WebApp.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class ExercisesController : BaseController
     {
         private readonly ExerciseService exerciseService;
@@ -20,11 +20,24 @@ namespace Backend.WebApp.Controllers
         }
 
         [HttpGet("get")]
-        [Authorize]
         public async Task<IActionResult> GetExercises()
         {
             var exercises = await exerciseService.GetExercises();
             return Ok(exercises);
+        }
+
+        [HttpGet("view")]
+        public IActionResult ViewExercise(Guid id)
+        {
+            var exercise = exerciseService.GetExercise(id);
+            return Ok(exercise);
+        }
+
+        [HttpGet("getExerciseForInsert")]
+        public async Task<IActionResult> GetExerciseForInsert(Guid id)
+        {
+            var exercise = await exerciseService.GetInsertExerciseModel(id);
+            return Ok(exercise);
         }
     }
 }

@@ -9,6 +9,7 @@ using Backend.BusinessLogic.Base;
 using System.Security.Claims;
 using Backend.BusinessLogic.Account;
 using Backend.BusinessLogic.Exercises;
+using Backend.BusinessLogic.Images;
 
 namespace Backend.WebApp.Code.ExtensionMethods
 {
@@ -26,6 +27,7 @@ namespace Backend.WebApp.Code.ExtensionMethods
             services.AddScoped<ServiceDependencies>();
             services.AddScoped<UserAccountService>();
             services.AddScoped<ExerciseService>();
+            services.AddScoped<ImageService>();
             return services;
         }
 

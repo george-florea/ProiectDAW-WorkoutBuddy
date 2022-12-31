@@ -9,14 +9,21 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Backend.BusinessLogic.Exercises
 {
-    public class EditExerciseModel
+    public class InsertExerciseModel
     {
+        public InsertExerciseModel()
+        {
+            ExerciseTypes = new List<ListItemModel<string, int>>();
+            MuscleGroups = new List<ListItemModel<string, int>>();
+            SelectedMuscleGroups = new List<int>();
+        }
+
         public Guid ExerciseId { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
         public List<ListItemModel<string, int>> ExerciseTypes { get; set; }
         public int SelectedType { get; set; }
-        public List<SelectListItem> MuscleGroups { get; set; }
+        public List<ListItemModel<string, int>> MuscleGroups { get; set; }
         public List<int>? SelectedMuscleGroups { get; set; }
         public IFormFile? Image { get; set; }
     }

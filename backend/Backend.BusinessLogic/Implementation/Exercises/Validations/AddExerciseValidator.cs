@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Backend.BusinessLogic.Exercises
 {
-    public class AddExerciseValidator : AbstractValidator<AddExerciseModel>
+    public class AddExerciseValidator : AbstractValidator<InsertExerciseModel>
     {
         private readonly UnitOfWork uow;
         public AddExerciseValidator(UnitOfWork uow)

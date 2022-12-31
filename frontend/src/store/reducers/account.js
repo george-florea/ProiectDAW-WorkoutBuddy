@@ -4,6 +4,7 @@ const initialState = {
   token: "",
   expiration: Date.now(),
   username: "",
+  roles: []
 };
 
 const accountSlice = createSlice({
@@ -14,22 +15,26 @@ const accountSlice = createSlice({
       sessionStorage.setItem("token", action.payload.token);
       sessionStorage.setItem("expiration", action.payload.expiration);
       sessionStorage.setItem("username", action.payload.username);
+      sessionStorage.setItem("roles", action.payload.roles);
       return action.payload;
     },
     register(state, action) {
       sessionStorage.setItem("token", action.payload.token);
       sessionStorage.setItem("expiration", action.payload.expiration);
       sessionStorage.setItem("username", action.payload.username);
+      sessionStorage.setItem("roles", action.payload.roles);
       return action.payload;
     },
     signOut() {
       sessionStorage.removeItem("token");
       sessionStorage.removeItem("expiration");
       sessionStorage.removeItem("username");
+      sessionStorage.removeItem("roles");
       return {
         token: "",
         expiration: "",
-        username: ""
+        username: "",
+        roles: []
       }
     },
     getUser() {},

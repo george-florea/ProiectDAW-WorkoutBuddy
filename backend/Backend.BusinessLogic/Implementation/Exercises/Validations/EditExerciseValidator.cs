@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 namespace Backend.BusinessLogic.Exercises
 {
     
-    public class EditExerciseValidator : AbstractValidator<EditExerciseModel>
+    public class EditExerciseValidator : AbstractValidator<InsertExerciseModel>
     {
         private readonly UnitOfWork uow;
         public EditExerciseValidator(UnitOfWork uow)
@@ -23,7 +23,7 @@ namespace Backend.BusinessLogic.Exercises
             this.uow = uow;
         }
 
-        private bool IsSameName(EditExerciseModel model, string? Name)
+        private bool IsSameName(InsertExerciseModel model, string? Name)
         {
             if (Name == null)
             {

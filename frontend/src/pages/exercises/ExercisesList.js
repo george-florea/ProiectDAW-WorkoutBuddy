@@ -1,8 +1,22 @@
+import {
+  Container,
+  Button,
+  Heading,
+  Box,
+  Grid,
+  GridItem,
+} from "@chakra-ui/react";
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import AuthHeader from "../../utils/authorizationHeaders";
+import Exercise from "./Exercise";
+
 
 const ExercisesList = () => {
+  const navigate = useNavigate();
+  const [exercises, setExercises] = useState([]);
+
   useEffect(() => {
     const getExercises = async () => {
       const { data } = await axios({
@@ -12,10 +26,36 @@ const ExercisesList = () => {
           Authorization: AuthHeader(),
         },
       });
+      setExercises(data);
     };
     getExercises();
   }, []);
-  return <div>ExercisesList</div>;
+
+const addHandler = () => {
+  navigate('/exercises/add-exercise');
+}
+
+  return (
+      <Box m={5} display={"flex"} justifyContent="center" flexDir={"column"}>
+        <Box
+          style={{
+            justifyContent: "space-between",
+            display: "flex",
+          }}
+        >
+          <Heading>Exercises: </Heading>
+          <Button colorScheme="blue" style={{ backgroundColor: "#d4f0a5" }} onClick={addHandler}>
+            Add new exercise
+          </Button>
+        </Box>
+
+        <Grid templateColumns="repeat(3, 1fr)" gap={6}>
+          {exercises.map((ex) => {
+            return <Exercise key={ex.exerciseId} exercise={ex}></Exercise>;
+          })}
+        </Grid>
+      </Box>
+  );
 };
 
 export default ExercisesList;

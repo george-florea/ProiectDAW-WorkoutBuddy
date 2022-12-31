@@ -4,7 +4,10 @@ import GeneralLayout from './layouts/GeneralLayout';
 import Login from './pages/account/Login';
 import Register from './pages/account/Register';
 import PrivateRoute from './pages/common/PrivateRoute';
+import ExercisesLayout from './pages/exercises/ExercisesLayout';
 import ExercisesList from './pages/exercises/ExercisesList';
+import InsertExercise from './pages/exercises/InsertExercise';
+import ViewExercise from './pages/exercises/ViewExercise';
 import MainPage from './pages/MainPage';
 
 const router = createBrowserRouter([
@@ -26,7 +29,21 @@ const router = createBrowserRouter([
         },
         {
           path: 'exercises',
-          element: <PrivateRoute><ExercisesList/></PrivateRoute>
+          element: <PrivateRoute><ExercisesLayout/></PrivateRoute>,
+          children: [
+            {
+              path: '/exercises',
+              element: <PrivateRoute><ExercisesList/></PrivateRoute>
+            },
+            {
+              path:'/exercises/add-exercise',
+              element: <PrivateRoute> <InsertExercise/> </PrivateRoute>
+            },
+            {
+              path: '/exercises/:id',
+              element: <PrivateRoute><ViewExercise /></PrivateRoute>
+            }
+          ]
         }
       ]
   },

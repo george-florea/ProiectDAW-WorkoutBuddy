@@ -8,7 +8,7 @@ namespace Backend.Common.DTOs
 {
     public class ListItemModel<TText, TValue>
     {
-        public TText Text { get; set; }
+        public TText Label { get; set; }
         public TValue Value { get; set; }
     }
 }
