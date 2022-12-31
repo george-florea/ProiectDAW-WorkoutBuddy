@@ -42,14 +42,35 @@ export default function InsertExercise() {
         },
       });
       setExercise(data);
-      console.log(data);
     };
 
     getExercise();
   }, []);
 
-  const submitHandler = (e) => {
-    console.log(exercise);
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    let formData = new FormData();
+    const selectedType = exercise.selectedType.value;
+    const selectedMuscleGroups = exercise.selectedMuscleGroups.map(mg => mg.value);
+
+    formData.append("name", exercise.name);
+    formData.append("description", exercise.description);
+    formData.append("image", exercise.image);
+    formData.append("selectedMuscleGroups", selectedMuscleGroups);
+    formData.append("selectedType", selectedType);
+    formData.append("muscleGroups", exercise.muscleGroups);
+    formData.append("exerciseId", exercise.exerciseId);
+    formData.append("exerciseTypes", exercise.exerciseTypes);
+    
+    const res = await axios({
+        method: 'post',
+        url: 'https://localhost:7132/Exercises/insertExercise',
+        data: formData,
+        headers: {
+            "Content-Type" : 'multipart/form-data',
+            Authorization: AuthHeader(),
+          }
+      })
   }
 
   return (
@@ -99,7 +120,7 @@ export default function InsertExercise() {
           <Select
             value={exercise.selectedType}
             onChange={(e) =>
-              setExercise({ ...exercise, selectedType: e.target.value })
+              setExercise({ ...exercise, selectedType: e })
             }
             options={exercise.exerciseTypes}
           />
@@ -118,7 +139,6 @@ export default function InsertExercise() {
         <FormControl isRequired>
           <FormLabel>Image</FormLabel>
           <Input
-            //value={exercise.image}
             onChange={(e) => {
               setExercise({ ...exercise, image: e.target.files[0] });
             }}

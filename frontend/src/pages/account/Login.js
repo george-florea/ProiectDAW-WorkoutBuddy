@@ -31,7 +31,6 @@ export default function Login() {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    debugger;
     const res = await axios({
       method: 'post',
       url: 'https://localhost:7132/UserAccount/login',

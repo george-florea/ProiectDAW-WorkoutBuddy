@@ -15,7 +15,7 @@ namespace Backend.BusinessLogic.Exercises
         {
             ExerciseTypes = new List<ListItemModel<string, int>>();
             MuscleGroups = new List<ListItemModel<string, int>>();
-            SelectedMuscleGroups = new List<int>();
+            //SelectedMuscleGroups = new List<int>();
         }
 
         public Guid ExerciseId { get; set; }
@@ -24,7 +24,7 @@ namespace Backend.BusinessLogic.Exercises
         public List<ListItemModel<string, int>> ExerciseTypes { get; set; }
         public int SelectedType { get; set; }
         public List<ListItemModel<string, int>> MuscleGroups { get; set; }
-        public List<int>? SelectedMuscleGroups { get; set; }
+        public string? SelectedMuscleGroups { get; set; }
         public IFormFile? Image { get; set; }
     }
 }

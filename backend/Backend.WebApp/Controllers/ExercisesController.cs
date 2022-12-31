@@ -39,5 +39,19 @@ namespace Backend.WebApp.Controllers
             var exercise = await exerciseService.GetInsertExerciseModel(id);
             return Ok(exercise);
         }
+
+        [HttpPost("insertExercise")]
+        public IActionResult InsertExercise([FromForm] InsertExerciseModel model)
+        {
+            if(model.ExerciseId == Guid.Empty)
+            {
+                //exerciseService.AddExercise(model);
+            }
+            else
+            {
+                //exerciseService.EditExercise(model);
+            }
+            return Ok();
+        }
     }
 }
