@@ -32,7 +32,11 @@ const ExercisesList = () => {
   }, []);
 
 const addHandler = () => {
-  navigate('/exercises/add-exercise');
+  navigate('/exercises/insert-exercise');
+}
+const deleteHandler = (exerciseId) => {
+  const newExercises = exercises.filter(ex => ex.exerciseId != exerciseId);
+  setExercises(newExercises);
 }
 
   return (
@@ -51,7 +55,7 @@ const addHandler = () => {
 
         <Grid templateColumns="repeat(3, 1fr)" gap={6}>
           {exercises.map((ex) => {
-            return <Exercise key={ex.exerciseId} exercise={ex}></Exercise>;
+            return <Exercise key={ex.exerciseId} exercise={ex} deleteHandler={deleteHandler}></Exercise>;
           })}
         </Grid>
       </Box>

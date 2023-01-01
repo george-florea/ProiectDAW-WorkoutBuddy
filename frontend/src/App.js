@@ -36,7 +36,7 @@ const router = createBrowserRouter([
               element: <PrivateRoute><ExercisesList/></PrivateRoute>
             },
             {
-              path:'/exercises/add-exercise',
+              path:'/exercises/insert-exercise',
               element: <PrivateRoute> <InsertExercise/> </PrivateRoute>
             },
             {

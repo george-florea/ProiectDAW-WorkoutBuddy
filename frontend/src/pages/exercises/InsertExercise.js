@@ -7,36 +7,40 @@ import {
   Input,
   Stack,
   useColorModeValue,
-  HStack,
-  Avatar,
-  AvatarBadge,
-  IconButton,
-  Center,
+  Textarea,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import AuthHeader from "../../utils/authorizationHeaders";
 import Select from "react-select";
+import { useNavigate } from "react-router-dom";
 
 const exerciseInitialState = {
   exerciseId: "00000000-0000-0000-0000-000000000000",
   name: " ",
   description: "",
   exerciseTypes: [],
-  selectedType: 0,
+  selectedType: {},
   muscleGroups: [],
   selectedMuscleGroups: [],
   image: "",
 };
 
 export default function InsertExercise() {
+  const navigate = useNavigate();
   const [exercise, setExercise] = useState(exerciseInitialState);
 
   useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const id = params?.get("id");
+
     const getExercise = async () => {
       const { data } = await axios({
         method: "get",
-        url: `https://localhost:7132/Exercises/getExerciseForInsert`,
+        url: `https://localhost:7132/Exercises/getExerciseForInsert?id=${
+          id ?? "00000000-0000-0000-0000-000000000000"
+        }`,
         headers: {
           Authorization: AuthHeader(),
         },
@@ -47,31 +51,45 @@ export default function InsertExercise() {
     getExercise();
   }, []);
 
+  
   const submitHandler = async (e) => {
     e.preventDefault();
-    let formData = new FormData();
-    const selectedType = exercise.selectedType.value;
-    const selectedMuscleGroups = exercise.selectedMuscleGroups.map(mg => mg.value);
 
+    let formData = new FormData();
+
+    let querryString = `?selectedType.value=${exercise.selectedType.value}&selectedType.label=${exercise.selectedType.label}`
+    
+    formData.append("exerciseId", exercise.exerciseId);
     formData.append("name", exercise.name);
     formData.append("description", exercise.description);
+    formData.append("selectedType", exercise.selectedType);
+    let index = 0;
+    debugger;
+    for(let mg of exercise.selectedMuscleGroups){
+      formData.append("selectedMuscleGroups", mg);
+      querryString += `&selectedMuscleGroups[${index}].value=${mg.value}`
+      querryString += `&selectedMuscleGroups[${index}].label=${mg.label}`
+      index++;
+    }
     formData.append("image", exercise.image);
-    formData.append("selectedMuscleGroups", selectedMuscleGroups);
-    formData.append("selectedType", selectedType);
-    formData.append("muscleGroups", exercise.muscleGroups);
-    formData.append("exerciseId", exercise.exerciseId);
-    formData.append("exerciseTypes", exercise.exerciseTypes);
     
-    const res = await axios({
-        method: 'post',
-        url: 'https://localhost:7132/Exercises/insertExercise',
+    
+
+    try {
+      await axios({
+        method: "post",
+        url: `https://localhost:7132/Exercises/insertExercise${querryString}`,
         data: formData,
         headers: {
-            "Content-Type" : 'multipart/form-data',
-            Authorization: AuthHeader(),
-          }
-      })
-  }
+          Authorization: AuthHeader(),
+          "Content-Type": "multipart/form-data"
+        },
+      });
+      navigate("/exercises");
+    } catch (err){
+      console.log("treat errs")
+    }
+  };
 
   return (
     <Flex
@@ -93,19 +111,23 @@ export default function InsertExercise() {
         <Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
           Insert Exercise
         </Heading>
-        <FormControl isRequired>
+        <FormControl
+          isRequired
+        >
           <FormLabel>Name</FormLabel>
           <Input
             value={exercise.name}
             onChange={(e) => setExercise({ ...exercise, name: e.target.value })}
-            placeholder="exercise name"
+            placeholder="name"
             _placeholder={{ color: "gray.500" }}
             type="text"
           />
         </FormControl>
-        <FormControl isRequired>
+        <FormControl
+          isRequired
+        >
           <FormLabel>Description</FormLabel>
-          <Input
+          <Textarea
             value={exercise.description}
             onChange={(e) =>
               setExercise({ ...exercise, description: e.target.value })
@@ -115,17 +137,18 @@ export default function InsertExercise() {
             type="text"
           />
         </FormControl>
-        <FormControl isRequired>
+        <FormControl
+        >
           <FormLabel>Exercise Types</FormLabel>
           <Select
             value={exercise.selectedType}
-            onChange={(e) =>
-              setExercise({ ...exercise, selectedType: e })
-            }
+            onChange={(e) => setExercise({ ...exercise, selectedType: e })}
             options={exercise.exerciseTypes}
           />
         </FormControl>
-        <FormControl isRequired>
+        <FormControl
+          isRequired
+        >
           <FormLabel>Muscle groups</FormLabel>
           <Select
             value={exercise.selectedMuscleGroups}
@@ -136,7 +159,11 @@ export default function InsertExercise() {
             options={exercise.muscleGroups}
           />
         </FormControl>
-        <FormControl isRequired>
+        <FormControl
+          isRequired={
+            exercise.exerciseId == "00000000-0000-0000-0000-000000000000"
+          }
+        >
           <FormLabel>Image</FormLabel>
           <Input
             onChange={(e) => {

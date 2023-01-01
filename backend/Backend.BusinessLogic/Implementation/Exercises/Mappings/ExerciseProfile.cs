@@ -19,18 +19,17 @@ namespace Backend.BusinessLogic.Exercises
                 .ForMember(a => a.Name, a => a.MapFrom(s => s.Name))
                 .ForMember(a => a.IdImage, a => a.MapFrom(s => s.Idimage));
 
-            /*CreateMap<AddExerciseModel, Exercise>()
+            CreateMap<InsertExerciseModel, Exercise>()
                 .ForMember(a => a.Idexercise, a => a.MapFrom(s => Guid.NewGuid()))
                 .ForMember(a => a.Name, a => a.MapFrom(a => a.Name))
                 .ForMember(a => a.IsPending, a => a.MapFrom(a => true))
-                .ForMember(a => a.Description, a => a.MapFrom(s => s.Description))
-                .ForMember(a => a.Idtype, a => a.MapFrom(s => s.SelectedType));*/
+                .ForMember(a => a.Description, a => a.MapFrom(s => s.Description));
 
             CreateMap<Exercise, InsertExerciseModel>()
                 .ForMember(a => a.ExerciseId, a => a.MapFrom(s => s.Idexercise))
                 .ForMember(a => a.Name, a => a.MapFrom(s => s.Name))
                 .ForMember(a => a.Description, a => a.MapFrom(s => s.Description))
-                .ForMember(a => a.SelectedType, a => a.MapFrom(s => s.IdtypeNavigation.Idtype));
+                .ForMember(a => a.SelectedMuscleGroups, a => a.Ignore());
 
         }
     }

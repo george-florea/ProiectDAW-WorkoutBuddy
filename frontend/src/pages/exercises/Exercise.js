@@ -12,8 +12,10 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import AuthHeader from "../../utils/authorizationHeaders";
 
-export default function Exercise({ exercise }) {
+export default function Exercise({ exercise, deleteHandler: deleteExercises }) {
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
   useEffect(() => {
@@ -28,11 +30,30 @@ export default function Exercise({ exercise }) {
   }
 
   const editHandler = (exerciseId) => {
-    console.log(exerciseId)
+    navigate(`/exercises/insert-exercise?id=${exerciseId}`)
   }
 
-  const deleteHandler = (exerciseId) => {
-    console.log(exerciseId)
+  const deleteHandler = async (exerciseId) => {
+    let res = confirm("Are you sure you want to delete this exercise?");
+    if(res){
+      try{
+        await axios({
+          method: "post",
+          url: `https://localhost:7132/Exercises/delete`,
+          data: exerciseId,
+          headers: {
+            "Content-Type": 'application/json',
+            "Authorization": AuthHeader(),
+          },
+        });
+        deleteExercises(exerciseId)
+      }
+      catch (err){
+
+      }
+     
+
+    }
   }
 
   return (
@@ -102,7 +123,6 @@ export default function Exercise({ exercise }) {
                 bg: "gray.200",
               }}
               onClick={(e) => viewHandler(exercise.exerciseId)}
-              //href={`https://localhost:3000/exercises/${exercise.exerciseId}`}
             >
               View
             </Button>

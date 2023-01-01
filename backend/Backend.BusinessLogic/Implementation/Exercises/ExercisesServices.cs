@@ -1,6 +1,7 @@
 ﻿using Backend.BusinessLogic.Base;
 using Backend.Common.DTOs;
 using Backend.Common.Exceptions;
+using Backend.Common.Extensions;
 using Backend.Entities;
 using Backend.Entities.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -14,12 +15,11 @@ namespace Backend.BusinessLogic.Exercises
 {
     public class ExerciseService : BaseService
     {
-        //private readonly AddExerciseValidator AddExerciseValidator;
-        //private readonly EditExerciseValidator EditExerciseValidator;
+        private readonly InsertExerciseValidator _insertExerciseValidator;
+
         public ExerciseService(ServiceDependencies serviceDependencies) : base(serviceDependencies)
         {
-            //AddExerciseValidator = new AddExerciseValidator(UnitOfWork);
-            //EditExerciseValidator = new EditExerciseValidator(UnitOfWork);
+            _insertExerciseValidator = new InsertExerciseValidator(UnitOfWork);
         }
 
         /*public int NumberOfPages(int pageSize)
@@ -100,11 +100,145 @@ namespace Backend.BusinessLogic.Exercises
             {
                 var exercise = await UnitOfWork.Exercises
                                         .Get()
+                                        .Include(e => e.IdtypeNavigation)
+                                        .Include(e => e.Idgroups)
                                         .FirstOrDefaultAsync(e => e.Idexercise == id);
                 Mapper.Map<Exercise, InsertExerciseModel>(exercise, model);
+                model.SelectedMuscleGroups = exercise.Idgroups
+                                                .Select(mg => new ListItemModel<string, int>
+                                                {
+                                                    Value = mg.Idgroup,
+                                                    Label = mg.Name
+                                                })
+                                                .ToList();
+
+                model.SelectedType = new ListItemModel<string, int>
+                {
+                    Value = exercise.IdtypeNavigation.Idtype,
+                    Label = exercise.IdtypeNavigation.Type
+                };
             }
 
             return model;
+        }
+
+        public void AddExercise(InsertExerciseModel model)
+        {
+            ExecuteInTransaction(uow =>
+            {
+
+                _insertExerciseValidator.Validate(model).ThenThrow(model);
+
+                var image = new Image();
+                image.Idimg = Guid.NewGuid();
+                using (var ms = new MemoryStream())
+                {
+                    model.Image.CopyTo(ms);
+                    var fileBytes = ms.ToArray();
+                    image.ImgContent = fileBytes;
+                }
+
+                var typeEntity = uow.ExerciseTypes.Get().FirstOrDefault(t => t.Idtype == model.SelectedType.Value);
+
+                var exercise = Mapper.Map<InsertExerciseModel, Exercise>(model);
+                exercise.Idimage = image.Idimg;
+                exercise.IdimageNavigation = image;
+                exercise.Idtype = model.SelectedType.Value;
+                exercise.IdtypeNavigation = typeEntity;
+
+                var selectedMGs = model.SelectedMuscleGroups
+                                            .Select(mg => mg.Value)
+                                            .ToList();
+
+                var musclesList = uow.MuscleGroups
+                                .Get()
+                                .Where(g => selectedMGs.Contains(g.Idgroup))
+                                .ToList();
+
+                musclesList.ForEach(m => exercise.Idgroups.Add(m));
+                exercise.Idgroups = musclesList;
+
+                uow.Exercises.Insert(exercise);
+                uow.SaveChanges();
+            });
+        }
+
+        public void EditExercise(InsertExerciseModel model)
+        {
+            ExecuteInTransaction(uow =>
+            {
+                _insertExerciseValidator.Validate(model).ThenThrow(model);
+                
+                var exercise = uow.Exercises.Get()
+                            .Include(e => e.Idgroups)
+                            .Include(e => e.IdimageNavigation)
+                            .Include(e => e.IdtypeNavigation)
+                            .FirstOrDefault(e => e.Idexercise == model.ExerciseId);
+
+                if (exercise == null)
+                {
+                    throw new NotFoundErrorException("Exercise not found");
+                }
+
+                if (model.Image != null)
+                {
+                    var image = exercise.IdimageNavigation;
+                    if (image == null)
+                    {
+                        image = new Image();
+                        image.Idimg = Guid.NewGuid();
+                    }
+
+                    using (var ms = new MemoryStream())
+                    {
+                        model.Image.CopyTo(ms);
+                        var fileBytes = ms.ToArray();
+                        image.ImgContent = fileBytes;
+                    }
+                    exercise.Idimage = image.Idimg;
+                    exercise.IdimageNavigation = image;
+                }
+
+                var typeEntity = uow.ExerciseTypes.Get().FirstOrDefault(t => t.Idtype == model.SelectedType.Value);
+                exercise.Idtype = typeEntity.Idtype;
+                exercise.IdtypeNavigation = typeEntity;
+                exercise.Name = model.Name;
+                exercise.Description = model.Description;
+
+                exercise.Idgroups.Clear();
+
+
+                var musclesList = uow.MuscleGroups
+                    .Get()
+                    .Where(g => model.SelectedMuscleGroups.Select(mg => mg.Value).Contains(g.Idgroup))
+                    .ToList();
+
+                musclesList.ForEach(m => exercise.Idgroups.Add(m));
+
+                uow.Exercises.Update(exercise);
+                uow.SaveChanges();
+            });
+        }
+
+        public void DeleteExercise(Guid id)
+        {
+            ExecuteInTransaction(uow =>
+            {
+                var exercise = uow.Exercises
+                            .Get()
+                            .Include(e => e.Idgroups)
+                            .Include(e => e.IdimageNavigation)
+                            .Include(e => e.IdtypeNavigation)
+                            .FirstOrDefault(e => e.Idexercise == id);
+
+                if (exercise == null)
+                {
+                    throw new NotFoundErrorException("Exercise not found");
+                }
+                exercise.Idgroups.Clear();
+                uow.Exercises.Delete(exercise);
+                uow.SaveChanges();
+            });
         }
 
         /*

@@ -1,4 +1,5 @@
 ﻿using Backend.BusinessLogic.Exercises;
+using Backend.Common.DTOs;
 using Backend.WebApp.Code.Base;
 using Backend.WebApp.Code.ExtensionMethods;
 using Backend.WebApp.Code.Utils;
@@ -34,23 +35,32 @@ namespace Backend.WebApp.Controllers
         }
 
         [HttpGet("getExerciseForInsert")]
-        public async Task<IActionResult> GetExerciseForInsert(Guid id)
+        public async Task<IActionResult> GetExerciseForInsert([FromQuery]Guid id)
         {
             var exercise = await exerciseService.GetInsertExerciseModel(id);
             return Ok(exercise);
         }
 
         [HttpPost("insertExercise")]
-        public IActionResult InsertExercise([FromForm] InsertExerciseModel model)
+        public IActionResult InsertExercise([FromQuery] ListItemModel<string, int> selectedType, [FromQuery] List<ListItemModel<string, int>> selectedMuscleGroups , [FromForm] InsertExerciseModel model)
         {
-            if(model.ExerciseId == Guid.Empty)
+            model.SelectedType = selectedType;
+            model.SelectedMuscleGroups = selectedMuscleGroups;
+            if (model.ExerciseId == Guid.Empty)
             {
-                //exerciseService.AddExercise(model);
+                exerciseService.AddExercise(model);
             }
             else
             {
-                //exerciseService.EditExercise(model);
+                exerciseService.EditExercise(model);
             }
+            return Ok();
+        }
+
+        [HttpPost("delete")]
+        public IActionResult DeleteExercise([FromBody] Guid exerciseId)
+        {
+            exerciseService.DeleteExercise(exerciseId);
             return Ok();
         }
     }
