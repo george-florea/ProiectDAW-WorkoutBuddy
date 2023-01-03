@@ -35,5 +35,10 @@ namespace Backend.DataAccess
         {
             Context.Set<TEntity>().Remove(entity);
         }
+
+        public void DeleteRange(IEnumerable<TEntity> entities)
+        {
+            Context.Set<TEntity>().RemoveRange(entities);
+        }
     }
 }

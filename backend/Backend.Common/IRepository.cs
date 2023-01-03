@@ -13,5 +13,6 @@ namespace Backend.Common
         TEntity Insert(TEntity entity);
         TEntity Update(TEntity entitty);
         void Delete(TEntity entity);
+        void DeleteRange(IEnumerable<TEntity> entities);
     }
 }
