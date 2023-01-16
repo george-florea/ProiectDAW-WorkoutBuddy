@@ -31,31 +31,27 @@ namespace Backend.WebApp.Controllers
 
             return Ok(model);
         }
+
+        [HttpGet("getInsertModel")]
+        public async Task<IActionResult> AddSplitAsync([FromQuery]Guid id)
+        {
+            var model = await service.GetInsertModel(id);
+            model.CreatorId = CurrentUser.Id;
+            return Ok(model);
+        }
+
+
+        [HttpPost("insertSplit")]
+        public IActionResult AddSplit([FromQuery] List<WorkoutModel> workouts, [FromForm]SplitModel model)
+        {
+            model.CreatorId = CurrentUser.Id;
+            model.Workouts = workouts;
+            service.AddSplit(model);
+            return Ok();
+        }
+
         /*
-                [HttpGet]
-                public IActionResult AddSplit()
-                {
-                    var muscleGroups = Enum.GetValues(typeof(MuscleGroups)).Cast<MuscleGroups>()
-                        .Select(v => new SelectListItem()
-                        {
-                            Text = v.ToString(),
-                            Value = ((int)v).ToString(),
-                        }).ToList();
-                    var model = new SplitModel()
-                    {
-                        MusclesGroups = muscleGroups
-                    };
-                    return View(model);
-                }
-
-
-                [HttpPost]
-                public IActionResult AddSplit(SplitModel model)
-                {
-                    model.CreatorId = CurrentUser.Id;
-                    service.AddSplit(model);
-                    return RedirectToAction("Index");
-                }
+                
 
 
 

@@ -9,6 +9,7 @@ import ExercisesList from "./pages/exercises/ExercisesList";
 import InsertExercise from "./pages/exercises/InsertExercise";
 import ViewExercise from "./pages/exercises/ViewExercise";
 import MainPage from "./pages/MainPage";
+import InsertSplit from "./pages/splits/InsertSplit";
 import SplitsList from "./pages/splits/SplitsList";
 import ViewSplit from "./pages/splits/ViewSplit";
 
@@ -85,21 +86,17 @@ const router = createBrowserRouter([
             ),
           },
           {
+            path:'/splits/insert-split',
+            element: <PrivateRoute> <InsertSplit/> </PrivateRoute>
+          },
+          {
             path: "/splits/:id",
             element: (
               <PrivateRoute>
                 <ViewSplit />
               </PrivateRoute>
             ),
-          },
-          // {
-          //   path:'/exercises/insert-exercise',
-          //   element: <PrivateRoute> <InsertExercise/> </PrivateRoute>
-          // },
-          // {
-          //   path: '/exercises/:id',
-          //   element: <PrivateRoute><ViewExercise /></PrivateRoute>
-          // }
+          }
         ],
       },
     ],

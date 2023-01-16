@@ -1,4 +1,5 @@
 ﻿using Backend.BusinessLogic.Base;
+using Backend.Common.DTOs;
 using Backend.Common.Exceptions;
 using Backend.Common.Extensions;
 using Backend.Entities;
@@ -49,8 +50,9 @@ namespace Backend.BusinessLogic.Splits
                                 rating += (int)userSplit.Rating;
                             }
                         }
+                        var count = split.UserSplits.Where(us => us.Rating != null).Count();
 
-                        rating /= split.UserSplits.Where(us => us.Rating != null).Count();
+                        rating /= count > 0 ? count : 1;
 
                         splitListItem.Rating = float.Parse(rating.ToString("0.00"));
                         splitListItem.WorkoutsNo = noOfWorkouts;
@@ -148,6 +150,104 @@ namespace Backend.BusinessLogic.Splits
             viewSplitModel.Workouts = workoutsListModel;
             viewSplitModel.Comments = comments;
             return viewSplitModel;
+        }
+
+        public async Task<SplitModel> GetInsertModel(Guid id)
+        {
+            var split = await UnitOfWork.Splits.Get()
+                                .Include(s => s.Workouts)
+                                    .ThenInclude(s => s.WorkoutExercises)
+                                        .ThenInclude(s => s.IdexerciseNavigation)
+                                .FirstOrDefaultAsync(s => s.Idsplit == id);
+
+            var muscleGroups = Enum.GetValues(typeof(MuscleGroups)).Cast<MuscleGroups>()
+                .Select(v => new ListItemModel<string, int>()
+                {
+                    Label = v.ToString(),
+                    Value = (int)v,
+                }).ToList();
+
+            if (split == null)
+            {
+                return new SplitModel()
+                {
+                    MusclesGroups = muscleGroups,
+                    Workouts = new List<WorkoutModel>()
+                };
+            }
+
+            var model = Mapper.Map<Split, SplitModel>(split);
+            model.MusclesGroups = muscleGroups;
+
+
+
+            model.Workouts = split.Workouts.Select(w => new WorkoutModel
+            {
+                Id = w.Idworkout,
+                WorkoutName = w.Name,
+                Exercises = w.WorkoutExercises.Select(we => we.Idexercise).ToList(),
+                SelectedMuscleGroups = w.WorkoutExercises
+                        .Select(w => w.IdexerciseNavigation)
+                        .SelectMany(e => e.Idgroups)
+                        .Distinct()
+                        .Select(g => g.Idgroup)
+                        .ToList()
+            }).ToList();
+
+            return model;
+        }
+
+        public void AddSplit(SplitModel model)
+        {
+            ExecuteInTransaction(uow =>
+            {
+                SplitValidator.Validate(model).ThenThrow(model);
+
+                var split = Mapper.Map<SplitModel, Split>(model);
+
+                var workouts = new List<Workout>();
+                for (var i = 0; i < model.Workouts.Count; i++)
+                {
+                    var currentWorkout = model.Workouts[i];
+                    if (!currentWorkout.IsDeleted)
+                    {
+                        var workout = Mapper.Map<Split, Workout>(split);
+                        workout.Name = currentWorkout.WorkoutName;
+
+                        currentWorkout.Exercises.ForEach(e =>
+                        {
+                            var exercise = uow.Exercises
+                                            .Get()
+                                            .FirstOrDefault(ex => ex.Idexercise == e);
+
+                            if (exercise == null)
+                            {
+                                throw new NotFoundErrorException("the exercise does not exist!");
+                            }
+
+                            workout.WorkoutExercises.Add(new WorkoutExercise()
+                            {
+                                Idworkout = workout.Idworkout,
+                                Idexercise = e,
+                                IdworkoutNavigation = workout,
+                                IdexerciseNavigation = exercise
+                            });
+                        });
+                        split.Workouts.Add(workout);
+                    }
+                }
+
+                var user = uow.Users.Get().FirstOrDefault(u => u.Iduser == split.Idcreator);
+                user.UserSplits.Add(new UserSplit()
+                {
+                    Idsplit = split.Idsplit,
+                    IdsplitNavigation = split,
+                    Iduser = user.Iduser,
+                    IduserNavigation = user
+                });
+                uow.Splits.Insert(split);
+                uow.SaveChanges();
+            });
         }
 
 

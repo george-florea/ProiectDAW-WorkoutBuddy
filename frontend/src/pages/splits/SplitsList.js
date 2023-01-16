@@ -11,8 +11,10 @@ import {
 import SplitCard from "./SplitCard";
 import axios from "axios";
 import AuthHeader from "../../utils/authorizationHeaders";
+import { useNavigate } from "react-router-dom";
 
 const SplitsList = () => {
+  const navigate = useNavigate();
   const [splits, setSplits] = useState([]);
 
   useEffect(() => {
@@ -25,13 +27,12 @@ const SplitsList = () => {
         },
       });
       setSplits(data);
-      console.log(data);
     };
     getExercises();
   }, []);
 
   const addHandler = () => {
-    navigate("/exercises/insert-exercise");
+    navigate("/splits/insert-split");
   };
 
   return (

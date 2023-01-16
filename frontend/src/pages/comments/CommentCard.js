@@ -118,7 +118,10 @@ export default function Comment({
                   w="full"
                   colorScheme="blue"
                   variant="outline"
-                  onClick={() => addHandler(commentText, commentId)}
+                  onClick={() => {
+                    addHandler(newReply, commentId)
+                    setNewReply("");
+                  }}
                 >
                   Add reply
                 </Button>

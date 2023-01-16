@@ -16,6 +16,7 @@ namespace Backend.BusinessLogic.Splits
                 .ForMember(a => a.IsPrivate, a => a.MapFrom(s => !(s.IsPrivate.HasValue && s.IsPrivate == false)))
                 .ForMember(s => s.Workouts, s => s.Ignore());
 
+            
             CreateMap<Split, Workout>()
                 .ForMember(a => a.Idworkout, a => a.MapFrom(s => Guid.NewGuid()))
                 .ForMember(a => a.Idsplit, a => a.MapFrom(s => s.Idsplit))
@@ -46,13 +47,14 @@ namespace Backend.BusinessLogic.Splits
                 .ForMember(s => s.Workouts, s => s.Ignore());
 
             CreateMap<Split, SplitModel>()
-                .ForMember(s => s.SplitId, a => a.MapFrom(s => s.Idsplit))
-                .ForMember(s => s.Name, s => s.MapFrom(s => s.Name))
-                .ForMember(s => s.Description, s => s.MapFrom(s => s.Description))
-                .ForMember(s => s.CreatorId, s => s.MapFrom(s => s.Idcreator))
-                .ForMember(s => s.IsPrivate, s => s.MapFrom(s => s.IsPrivate))
-                .ForMember(s => s.MusclesGroups, s => s.Ignore())
+                .ForMember(a => a.SplitId, a => a.MapFrom(s => s.Idsplit))
+                .ForMember(a => a.Name, a => a.MapFrom(s => s.Name))
+                .ForMember(a => a.CreatorId, a => a.MapFrom(s => s.Idcreator))
+                .ForMember(a => a.Description, a => a.MapFrom(s => s.Description))
+                .ForMember(a => a.IsPrivate, a => a.MapFrom(s => s.IsPrivate))
+                .ForMember(a => a.MusclesGroups, a => a.Ignore())
                 .ForMember(s => s.Workouts, s => s.Ignore());
+
 
         }
     }

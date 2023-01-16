@@ -1,4 +1,5 @@
 ﻿using Backend.BusinessLogic.Base;
+using Backend.BusinessLogic.Splits;
 using Backend.Common.DTOs;
 using Backend.Common.Exceptions;
 using Backend.Common.Extensions;
@@ -239,6 +240,34 @@ namespace Backend.BusinessLogic.Exercises
                 uow.Exercises.Delete(exercise);
                 uow.SaveChanges();
             });
+        }
+
+        public async Task<List<ListItemModel<string, string>>> GetFilteredExercises(List<string> selectedGroups)
+        {
+            var groups = UnitOfWork.MuscleGroups.Get()
+                .Where(m => selectedGroups.Contains(m.Idgroup.ToString()));
+
+            if (groups == null)
+            {
+                throw new NotFoundErrorException("invalid muscle groups!");
+            }
+            var exercises = await groups.SelectMany(m => m.Idexercises)
+                            .Where(e => e.IsPending != true)
+                            .Distinct()
+                            .ToListAsync();
+
+            var list = new List<ListItemModel<string, string>>();
+
+            foreach (var ex in exercises)
+            {
+                list.Add(new ListItemModel<string, string>()
+                {
+                    Value = ex.Idexercise.ToString(),
+                    Label = ex.Name
+                });
+            }
+
+            return list;
         }
 
         /*
@@ -484,32 +513,6 @@ namespace Backend.BusinessLogic.Exercises
                     });
                 }
 
-                public List<SplitExerciseModel> GetFilteredExercises(List<string> selectedGroups)
-                {
-                    var groups = UnitOfWork.MuscleGroups.Get()
-                        .Where(m => selectedGroups.Contains(m.Idgroup.ToString()));
-
-                    if (groups == null)
-                    {
-                        throw new NotFoundErrorException("invalid muscle groups!");
-                    }
-                    var exercises = groups.SelectMany(m => m.Idexercises)
-                                    .Where(e => e.IsPending != true)
-                                    .Distinct()
-                                    .ToList();
-
-                    var list = new List<SplitExerciseModel>();
-
-                    foreach (var ex in exercises)
-                    {
-                        list.Add(new SplitExerciseModel()
-                        {
-                            ExerciseId = ex.Idexercise,
-                            ExerciseName = ex.Name
-                        });
-                    }
-
-                    return list;
-                }*/
+                */
     }
 }

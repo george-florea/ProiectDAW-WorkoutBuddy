@@ -63,5 +63,12 @@ namespace Backend.WebApp.Controllers
             exerciseService.DeleteExercise(exerciseId);
             return Ok();
         }
+
+        [HttpGet("getExercisesByMuscleGroups")]
+        public async Task<IActionResult> GetExercisesByMuscleGroups([FromQuery]List<string> selectedMusclesString)
+        {
+            var exercises = await exerciseService.GetFilteredExercises(selectedMusclesString);
+            return Ok(exercises);
+        }
     }
 }
