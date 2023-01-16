@@ -270,6 +270,59 @@ namespace Backend.BusinessLogic.Exercises
             return list;
         }
 
+        public List<ExerciseAsListItemModel> GetPendingExercises()
+        {
+            var exercisesList = new List<ExerciseAsListItemModel>();
+            var listOfExercises = UnitOfWork.Exercises
+                .Get()
+                .Where(e => e.IsPending == true)
+                .OrderBy(e => e.Name)
+                .ToList();
+
+            if (listOfExercises == null)
+            {
+                return exercisesList;
+            }
+
+            foreach (var exercise in listOfExercises)
+            {
+                var exerciseType = UnitOfWork.ExerciseTypes.Get().FirstOrDefault(t => t.Idtype == exercise.Idtype).Type;
+                var exerciseModel = Mapper.Map<Exercise, ExerciseAsListItemModel>(exercise);
+                exerciseModel.ExerciseType = exerciseType;
+                exercisesList.Add(exerciseModel);
+            }
+            return exercisesList;
+        }
+
+        public bool ApproveExercise(Guid id)
+        {
+            var isOk = true;
+            ExecuteInTransaction(uow =>
+            {
+                var exercise = uow.Exercises.Get()
+                                .FirstOrDefault(e => e.Idexercise == id);
+                if (exercise == null)
+                {
+                    throw new NotFoundErrorException("this exercise does not exist");
+                }
+
+                exercise.IsPending = false;
+
+                try
+                {
+                    uow.Exercises.Update(exercise);
+                    uow.SaveChanges();
+
+                }
+                catch (Exception e)
+                {
+                    isOk = false;
+                }
+
+            });
+            return isOk;
+        }
+
         /*
                 public List<ExerciseAsListItemModel> GetPendingExercises()
                 {

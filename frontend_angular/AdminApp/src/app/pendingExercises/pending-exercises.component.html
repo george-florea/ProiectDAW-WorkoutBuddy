@@ -1,0 +1,6 @@
+<div class="body">
+    <ul *ngFor="let ex of exercises" class="pendingCards">
+        <app-exercise-card [exercise]="ex" (handler)="actionHandler($event)"></app-exercise-card>
+    </ul>
+    <p *ngIf="exercises.length == 0">Nu exista exercitii de aprobat</p>
+</div>

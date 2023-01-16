@@ -16,6 +16,10 @@ const accountSlice = createSlice({
       sessionStorage.setItem("expiration", action.payload.expiration);
       sessionStorage.setItem("username", action.payload.username);
       sessionStorage.setItem("roles", action.payload.roles);
+      localStorage.setItem("token", action.payload.token);
+      localStorage.setItem("expiration", action.payload.expiration);
+      localStorage.setItem("username", action.payload.username);
+      localStorage.setItem("roles", action.payload.roles);
       return action.payload;
     },
     register(state, action) {

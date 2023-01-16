@@ -1,0 +1,27 @@
+.example-container {
+    position: absolute;
+    left: 0;
+    right: 0;
+  }
+  
+  .example-sidenav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    background: #d4f0a5;
+    color:#393E46;
+  }
+
+  .listItems{
+    color: #393E46;
+  }
+
+  .listItems:hover{
+    background-color: #e9f7d1;
+  }
+
+  .header{
+    color: #d4f0a5;
+    margin-left: 200px;
+  }

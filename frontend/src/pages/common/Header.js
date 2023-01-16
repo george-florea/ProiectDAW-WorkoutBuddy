@@ -24,19 +24,20 @@ const Links = ["Home", "Splits", "Exercises"];
 
 const NavLink = ({ children }) => {
   return (
-  <Link
-    px={2}
-    py={1}
-    rounded={"md"}
-    _hover={{
-      textDecoration: "none",
-      bg: useColorModeValue("gray.200", "gray.700"),
-    }}
-    href={"/" + children.toLowerCase()}
-  >
-    {children}
-  </Link>
-)};
+    <Link
+      px={2}
+      py={1}
+      rounded={"md"}
+      _hover={{
+        textDecoration: "none",
+        bg: useColorModeValue("gray.200", "gray.700"),
+      }}
+      href={"/" + children.toLowerCase()}
+    >
+      {children}
+    </Link>
+  );
+};
 
 export default function Header() {
   const dispatcher = useDispatch();
@@ -44,17 +45,23 @@ export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const accountState = useSelector((state) => state.account);
   const [username, setUsername] = useState(accountState.username);
+  const [isAdmin, setisAdmin] = useState(false);
+  const [jwtToken, setJwtToken] = useState("");
 
   const logoutHandler = () => {
     dispatcher(accountActions.signOut());
     location.href = "/login";
   };
-
+  
+  
   useEffect(() => {
     const token = sessionStorage.getItem("token");
+    setJwtToken(token);
     if (token) {
       setIsLoggedIn(true);
+      debugger;
       setUsername(sessionStorage.getItem("username") ?? "User");
+      setisAdmin(sessionStorage.getItem("roles").includes("Admin"))
     } else {
       setIsLoggedIn(false);
     }
@@ -63,28 +70,40 @@ export default function Header() {
   return (
     <>
       <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
-          {isLoggedIn ? (
-            <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
-              <IconButton
-                size={"md"}
-                icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
-                aria-label={"Open Menu"}
-                display={{ md: "none" }}
-                onClick={isOpen ? onClose : onOpen}
-              />
-              <HStack spacing={8} alignItems={"center"}>
-                <Box>Workout Buddy</Box>
-                <HStack
-                  as={"nav"}
-                  spacing={4}
-                  display={{ base: "none", md: "flex" }}
-                >
-                  {Links.map((link) => (
-                    <NavLink key={link}>{link}</NavLink>
-                  ))}
-                </HStack>
+        {isLoggedIn ? (
+          <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
+            <IconButton
+              size={"md"}
+              icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+              aria-label={"Open Menu"}
+              display={{ md: "none" }}
+              onClick={isOpen ? onClose : onOpen}
+            />
+            <HStack spacing={8} alignItems={"center"}>
+              <Box>Workout Buddy</Box>
+              <HStack
+                as={"nav"}
+                spacing={4}
+                display={{ base: "none", md: "flex" }}
+              >
+                {Links.map((link) => (
+                  <NavLink key={link}>{link}</NavLink>
+                ))}
+                {isAdmin && <Link
+                px={2}
+                py={1}
+                rounded={"md"}
+                _hover={{
+                  textDecoration: "none",
+                  bg: useColorModeValue("gray.200", "gray.700"),
+                }}
+                href={`http://localhost:4200/pending-exercises?token=${jwtToken}`}
+              >
+                Pending Exercises
+              </Link>}
               </HStack>
-              <Flex alignItems={"center"}>
+            </HStack>
+            <Flex alignItems={"center"}>
               <>Hello, </>
               <Menu>
                 <MenuButton
@@ -106,41 +125,39 @@ export default function Header() {
                 </MenuList>
               </Menu>
             </Flex>
-            </Flex>
-          )
-          : (
-            <Flex alignItems={"flex-end"} justifyContent={"space-between"}>
-              <Stack
-                flex={{ base: 1, md: 0 }}
-                justify={"flex-end"}
-                direction={"row"}
-                spacing={6}
+          </Flex>
+        ) : (
+          <Flex alignItems={"flex-end"} justifyContent={"space-between"}>
+            <Stack
+              flex={{ base: 1, md: 0 }}
+              justify={"flex-end"}
+              direction={"row"}
+              spacing={6}
+            >
+              <Button
+                as={"a"}
+                fontSize={"sm"}
+                fontWeight={400}
+                variant={"link"}
+                href="/login"
               >
-                <Button
-                  as={"a"}
-                  fontSize={"sm"}
-                  fontWeight={400}
-                  variant={"link"}
-                  href="/login"
-                >
-                  <Link href="/login">Sign In</Link>
-                </Button>
-                <Button
-                  display={{ base: "none", md: "inline-flex" }}
-                  fontSize={"sm"}
-                  fontWeight={600}
-                  color={"white"}
-                  bg={"pink.400"}
-                  _hover={{
-                    bg: "pink.300",
-                  }}
-                >
-                  <Link href="/register">Sign Up</Link>
-                </Button>
-              </Stack>
-            </Flex>
-          )
-          }
+                <Link href="/login">Sign In</Link>
+              </Button>
+              <Button
+                display={{ base: "none", md: "inline-flex" }}
+                fontSize={"sm"}
+                fontWeight={600}
+                color={"white"}
+                bg={"pink.400"}
+                _hover={{
+                  bg: "pink.300",
+                }}
+              >
+                <Link href="/register">Sign Up</Link>
+              </Button>
+            </Stack>
+          </Flex>
+        )}
 
         {isOpen ? (
           <Box pb={4} display={{ md: "none" }}>
@@ -148,6 +165,18 @@ export default function Header() {
               {Links.map((link) => (
                 <NavLink key={link}>{link}</NavLink>
               ))}
+              <Link
+                px={2}
+                py={1}
+                rounded={"md"}
+                _hover={{
+                  textDecoration: "none",
+                  bg: useColorModeValue("gray.200", "gray.700"),
+                }}
+                href={`http://localhost:4200/pending-exercises?token=${jwtToken}`}
+              >
+                Pending Exercises
+              </Link>
             </Stack>
           </Box>
         ) : null}

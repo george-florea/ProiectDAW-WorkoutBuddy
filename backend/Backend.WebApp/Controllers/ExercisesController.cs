@@ -10,7 +10,7 @@ namespace Backend.WebApp.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class ExercisesController : BaseController
     {
         private readonly ExerciseService exerciseService;
@@ -70,5 +70,20 @@ namespace Backend.WebApp.Controllers
             var exercises = await exerciseService.GetFilteredExercises(selectedMusclesString);
             return Ok(exercises);
         }
+
+        [HttpPost("approve")]
+        public IActionResult ApproveExercise([FromBody] string id)
+        {
+            exerciseService.ApproveExercise(Guid.Parse(id));
+            return Ok();
+        }
+
+        [HttpPost("reject")]
+        public IActionResult Reject([FromBody] string id)
+        {
+            exerciseService.DeleteExercise(Guid.Parse(id));
+            return Ok();
+        }
+
     }
 }

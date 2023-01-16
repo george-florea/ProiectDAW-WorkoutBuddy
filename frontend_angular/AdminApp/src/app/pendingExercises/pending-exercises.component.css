@@ -1,0 +1,10 @@
+.body{
+    padding: 0 100px;
+    margin-top: 5vh;
+    height: 88.5vh;
+}
+
+.pendingCards{
+    display: flex;
+    justify-content: center;
+}
