@@ -1,0 +1,29 @@
+<div class="body">
+    <h1 >User profile</h1>
+    <mat-card class="card">
+        <div class="card-header">
+            <mat-card-title>
+                <h2>
+                    {{user.name}}
+                </h2>
+            </mat-card-title>
+            <mat-card-subtitle>{{user.username}}</mat-card-subtitle>
+        </div>
+        <mat-card-content>
+            <mat-list>
+                <mat-list-item>Birthday: {{user.birthDate | date}}</mat-list-item>
+                <mat-list-item>Email: {{user.email}}</mat-list-item>
+                <mat-list-item>Current weight: {{user.currentWeight}} kgs</mat-list-item>
+                <mat-list-item>
+                    <span matListItemTitle>Roles:</span>
+                    <span matListItemLine *ngFor="let role of user.roles">{{role}}</span>
+                  </mat-list-item>
+            </mat-list>
+        </mat-card-content>
+        <mat-card-footer>
+            <mat-card-actions>
+                <a [routerLink]="['/edit-profile']"><button mat-raised-button color="primary" >Edit profile</button></a>
+            </mat-card-actions>
+        </mat-card-footer>
+    </mat-card>
+</div>

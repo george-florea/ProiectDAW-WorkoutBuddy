@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
   CanActivate,
-  Router,
   RouterStateSnapshot,
   UrlTree,
 } from '@angular/router';
@@ -11,9 +10,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class PendingExerciseGuard implements CanActivate {
-  constructor(private router: Router) {}
-
+export class EditProfileGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
@@ -22,6 +19,8 @@ export class PendingExerciseGuard implements CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
+
+
     const params = new URLSearchParams(location.search);
     const token = params?.get('token');
 
@@ -37,9 +36,9 @@ export class PendingExerciseGuard implements CanActivate {
       sessionStorage.setItem('token', token!);
     }
 
-    if (location.href != 'http://localhost:4200/pending-exercises') {
-        location.href = 'http://localhost:4200/pending-exercises';
-      }
+    if (location.href != 'http://localhost:4200/edit-profile') {
+      location.href = 'http://localhost:4200/edit-profile';
+    }
 
     return true;
   }

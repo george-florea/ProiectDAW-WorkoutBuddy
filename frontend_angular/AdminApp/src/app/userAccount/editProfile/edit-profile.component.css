@@ -1,0 +1,30 @@
+.body{
+    padding: 0 100px;
+    margin-top: 5vh;
+    height: 88.5vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.card{
+    display: flex;
+    justify-content: center;
+    width: fit-content;
+}
+
+.card-header{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+    flex-direction: column;
+}
+
+form{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem;
+}

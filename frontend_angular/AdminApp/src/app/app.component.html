@@ -1,7 +1,7 @@
 <ng-container>
-    <mat-toolbar>
-        <span class="header">WorkoutBuddy</span>
-      </mat-toolbar>
+  <mat-toolbar>
+    <span class="header">WorkoutBuddy</span>
+  </mat-toolbar>
   <mat-sidenav-container class="example-container">
     <mat-sidenav
       #sidenav
@@ -12,19 +12,31 @@
     >
       <mat-list>
         <mat-list-item class="listItems">
-            <a class="listItems" [routerLink]="['/exercises']"> Exercises </a>
+          <a class="listItems" [routerLink]="['/exercises']"> Exercises </a>
         </mat-list-item>
         <mat-list-item class="listItems">
-            <a class="listItems" [routerLink]="['/splits']"> Splits </a>
+          <a class="listItems" [routerLink]="['/splits']"> Splits </a>
         </mat-list-item>
         <mat-list-item class="listItems">
-            <a class="listItems" [routerLink]="['/pending-exercises']"> Pending Exercises </a>
-          </mat-list-item>
+          <a class="listItems" [routerLink]="['/pending-exercises']">
+            Pending Exercises
+          </a>
+        </mat-list-item>
+        <mat-list-item class="listItems">
+          <a class="listItems" [routerLink]="['/user-profile']">
+            User Profile
+          </a>
+        </mat-list-item>
+        <mat-list-item class="listItems">
+          <a class="listItems" [routerLink]="['/edit-profile']">
+            Edit Profile
+          </a>
+        </mat-list-item>
       </mat-list>
     </mat-sidenav>
 
-    <mat-sidenav-content> 
-        <router-outlet></router-outlet>
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
     </mat-sidenav-content>
   </mat-sidenav-container>
 </ng-container>

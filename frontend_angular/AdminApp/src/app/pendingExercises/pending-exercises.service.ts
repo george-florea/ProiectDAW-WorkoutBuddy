@@ -8,14 +8,9 @@ import { IExercise } from './IExercise';
 })
 export class PendingExercisesService {
   constructor(private http: HttpClient) {
-    const params = new URLSearchParams(location.search);
-    var jwtToken = params?.get('token');
-    if (jwtToken) {
-      this.token = this.token + jwtToken;
-    }
   }
 
-  token: string | null = 'Bearer ' + new URLSearchParams(location.search)?.get('token');
+  token: string | null = 'Bearer ' + sessionStorage.getItem('token');
 
   pendingExercises$ = this.http
     .get<IExercise[]>('https://localhost:7132/Admin/getPendingExercises', {
@@ -69,6 +64,7 @@ export class PendingExercisesService {
         {
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `${this.token}`,
           },
         }
       )

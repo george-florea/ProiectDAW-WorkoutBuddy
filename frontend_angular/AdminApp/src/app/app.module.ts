@@ -15,6 +15,9 @@ import { PendingExercisesComponent } from './pendingExercises/pending-exercises.
 import { HttpClientModule } from '@angular/common/http';
 import { ExerciseCardComponent } from './pendingExercises/exercise-card.component';
 import {MatButtonModule} from '@angular/material/button';
+import { UserProfileComponent } from './userAccount/userProfile/user-profile.component';
+import { EditProfileComponent } from './userAccount/editProfile/edit-profile.component';
+import { UserAccountModule } from './userAccount/user-account.module';
 
 
 @NgModule({
@@ -34,7 +37,8 @@ import {MatButtonModule} from '@angular/material/button';
     MatListModule,
     MatToolbarModule,
     HttpClientModule,
-    MatButtonModule
+    MatButtonModule,
+    UserAccountModule
   ],
   providers: [],
   bootstrap: [AppComponent]

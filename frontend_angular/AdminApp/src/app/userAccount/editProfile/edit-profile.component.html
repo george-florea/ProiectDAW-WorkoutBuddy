@@ -1,0 +1,35 @@
+<div class="body">
+  <h1>Edit profile</h1>
+  <mat-card class="card">
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="form">
+      <mat-form-field appearance="fill">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name"/>
+      </mat-form-field>
+      <!-- <label for="name">Name: </label>
+      <input id="name" type="text" formControlName="name" />
+
+      <label for="username">Username: </label>
+      <input id="username" type="text" formControlName="username" />
+
+      <label for="email">Email: </label>
+      <input id="email" type="text" formControlName="email" />
+
+      <label for="birthdate">Birthdate: </label>
+      <input id="birthdate" type="date" formControlName="birthdate" /> -->
+      <mat-form-field appearance="fill">
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="username" />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email"/>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Birthdate</mat-label>
+        <input matInput matNativeControl type="datetime-local" formControlName="birthdate"/>
+      </mat-form-field>
+        <button mat-raised-button color="primary" type="submit">Submit</button>
+    </form>
+  </mat-card>
+</div>

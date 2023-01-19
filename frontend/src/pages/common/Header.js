@@ -52,16 +52,14 @@ export default function Header() {
     dispatcher(accountActions.signOut());
     location.href = "/login";
   };
-  
-  
+
   useEffect(() => {
     const token = sessionStorage.getItem("token");
     setJwtToken(token);
     if (token) {
       setIsLoggedIn(true);
-      debugger;
       setUsername(sessionStorage.getItem("username") ?? "User");
-      setisAdmin(sessionStorage.getItem("roles").includes("Admin"))
+      setisAdmin(sessionStorage.getItem("roles").includes("Admin"));
     } else {
       setIsLoggedIn(false);
     }
@@ -89,18 +87,20 @@ export default function Header() {
                 {Links.map((link) => (
                   <NavLink key={link}>{link}</NavLink>
                 ))}
-                {isAdmin && <Link
-                px={2}
-                py={1}
-                rounded={"md"}
-                _hover={{
-                  textDecoration: "none",
-                  bg: useColorModeValue("gray.200", "gray.700"),
-                }}
-                href={`http://localhost:4200/pending-exercises?token=${jwtToken}`}
-              >
-                Pending Exercises
-              </Link>}
+                {isAdmin && (
+                  <Link
+                    px={2}
+                    py={1}
+                    rounded={"md"}
+                    _hover={{
+                      textDecoration: "none",
+                      bg: useColorModeValue("gray.200", "gray.700"),
+                    }}
+                    href={`http://localhost:4200/pending-exercises?token=${jwtToken}`}
+                  >
+                    Pending Exercises
+                  </Link>
+                )}
               </HStack>
             </HStack>
             <Flex alignItems={"center"}>
@@ -116,8 +116,33 @@ export default function Header() {
                   <p>{username}</p>
                 </MenuButton>
                 <MenuList>
-                  <MenuItem>My profile</MenuItem>
-                  <MenuItem>Edit profile</MenuItem>
+                  <MenuItem>
+                    <Link
+                      px={2}
+                      py={1}
+                      rounded={"md"}
+                      _hover={{
+                        textDecoration: "none",
+                        bg: useColorModeValue("gray.200", "gray.700"),
+                      }}
+                      href={`http://localhost:4200/user-profile?token=${jwtToken}`}
+                    >
+                      My profile
+                    </Link>
+                  </MenuItem>
+                  <MenuItem>
+                  <Link
+                      px={2}
+                      py={1}
+                      rounded={"md"}
+                      _hover={{
+                        textDecoration: "none",
+                        bg: useColorModeValue("gray.200", "gray.700"),
+                      }}
+                      href={`http://localhost:4200/edit-profile?token=${jwtToken}`}
+                    >
+                      Edit profile
+                    </Link></MenuItem>
                   <MenuItem>Change password</MenuItem>
                   <MenuItem>Edit weight</MenuItem>
                   <MenuDivider />

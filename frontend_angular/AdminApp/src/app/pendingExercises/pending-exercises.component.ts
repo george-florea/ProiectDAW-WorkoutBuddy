@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subscriber, Subscription } from 'rxjs';
 import { IActionHandler } from './IActionHandler';
 import { IExercise } from './IExercise';
@@ -8,7 +8,7 @@ import { PendingExercisesService } from './pending-exercises.service';
   templateUrl: './pending-exercises.component.html',
   styleUrls: ['./pending-exercises.component.css'],
 })
-export class PendingExercisesComponent implements OnInit {
+export class PendingExercisesComponent implements OnInit, OnDestroy {
   constructor(private service: PendingExercisesService) {}
 
   sub$!: Subscription;
@@ -17,9 +17,11 @@ export class PendingExercisesComponent implements OnInit {
   ngOnInit(){
     this.sub$ = this.service.updatedPendingExercises$.subscribe({
       next: exercises => this.exercises = exercises,
-      error: err => location.href = 'https://localhost:3000'
     });
+  }
 
+  ngOnDestroy(): void {
+    this.sub$.unsubscribe();
   }
 
   actionHandler(actionObject: IActionHandler): void {
