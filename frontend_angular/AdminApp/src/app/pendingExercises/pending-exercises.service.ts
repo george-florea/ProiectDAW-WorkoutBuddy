@@ -34,8 +34,11 @@ export class PendingExercisesService {
       (value instanceof Array) ? [...value] : acc.filter(ex => ex.exerciseId != value), [] as IExercise[])
   )
   
-  updateExercise(exerciseId: string):void{
-    this.updateExerciseSubject.next(exerciseId);
+  updateExercise(exerciseId: string){
+    return new Observable((observer) => {
+      this.updateExerciseSubject.next(exerciseId);
+    })
+    
   }
 
   approveExercise(exerciseId: string): Observable<string> {

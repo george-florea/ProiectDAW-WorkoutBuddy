@@ -1,8 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
+import { getEditInfoSelector } from '../store/account.reducer';
+import { IAccountState } from '../store/account.state';
 import { UserAccountService } from '../user-account.service';
 import { IEditInfo } from './IEditInfo';
+import * as accountActions from '../store/account.actions'
+
 
 @Component({
   selector: 'app-edit-profile',
@@ -10,7 +15,7 @@ import { IEditInfo } from './IEditInfo';
   styleUrls: ['./edit-profile.component.css'],
 })
 export class EditProfileComponent implements OnInit, OnDestroy {
-  constructor(private service: UserAccountService) {}
+  constructor(private store: Store<IAccountState>) {}
 
   sub$!: Subscription;
   user: IEditInfo = {
@@ -28,7 +33,9 @@ export class EditProfileComponent implements OnInit, OnDestroy {
   });
 
   ngOnInit(): void {
-    this.sub$ = this.service.editInfo$.subscribe({
+    this.store.dispatch(accountActions.getEditInfo());
+
+    this.sub$ = this.store.select(getEditInfoSelector).subscribe({
       next: (user) => {
         this.user = user;
         this.setUser(user);
@@ -49,11 +56,6 @@ export class EditProfileComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(){
-    this.service
-          .editProfile(this.profileForm.value as IEditInfo)
-          .subscribe({
-            next: data => location.href = '/user-profile',
-            error: err => location.href = 'https://localhost:3000'
-          });
+    this.store.dispatch(accountActions.submitEditInfo({ editInfo: this.profileForm.value as IEditInfo}))
   }
 }

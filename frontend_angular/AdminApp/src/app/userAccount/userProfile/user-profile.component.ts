@@ -1,7 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { UserAccountService } from '../user-account.service';
+import { IAccountState } from '../store/account.state';
 import { IUserProfile } from './IUserProfile';
+import * as accountActions from '../store/account.actions'
+import {  getUserProfileSelector } from '../store/account.reducer';
 
 @Component({
   selector: 'app-user-profile',
@@ -9,7 +12,7 @@ import { IUserProfile } from './IUserProfile';
   styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent implements OnInit, OnDestroy{
-  constructor(private service: UserAccountService) {}
+  constructor(private store: Store<IAccountState>) {}
 
   sub$!: Subscription;
   user: IUserProfile = {
@@ -22,10 +25,16 @@ export class UserProfileComponent implements OnInit, OnDestroy{
   };
 
   ngOnInit(): void {
-    this.sub$ = this.service.userInfo$.subscribe({
-      next: user => this.user = user,
-      error: err => console.log(err)
+    this.store.dispatch(accountActions.getUserProfile());
+
+    this.sub$ = this.store.select(getUserProfileSelector).subscribe({
+      next: user => this.user = user
     })
+
+    // this.sub$ = this.service.userInfo$.subscribe({
+    //   next: user => this.user = user,
+    //   error: err => console.log(err)
+    // })
   }
 
   ngOnDestroy(): void {

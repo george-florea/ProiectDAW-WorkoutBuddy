@@ -30,6 +30,30 @@ export default function SplitCard({ split }) {
     navigate(`/splits/${id}`);
   }
 
+  const editHandler = (id) => {
+    navigate(`/splits/insert-split?id=${id}`);
+  }
+
+  const deleteHandler = async (id) => {
+    let res = confirm("Are you sure you want to delete this split?");
+    if(res){
+      try{
+        await axios({
+          method: "post",
+          url: `https://localhost:7132/Splits/delete`,
+          data: id,
+          headers: {
+            "Content-Type": 'application/json',
+            "Authorization": AuthHeader(),
+          },
+        });
+        deleteExercises(exerciseId)
+      }
+      catch (err){
+      }
+    }
+  }
+
   return (
     <Center py={6}>
       <Stack
@@ -129,6 +153,7 @@ export default function SplitCard({ split }) {
                   _focus={{
                     bg: "blue.500",
                   }}
+                  onClick={(e) => editHandler(split.splitId)}
                 >
                   Edit
                 </Button>

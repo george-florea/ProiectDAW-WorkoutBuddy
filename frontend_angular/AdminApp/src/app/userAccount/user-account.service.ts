@@ -37,6 +37,7 @@ export class UserAccountService {
     );
 
   editProfile(user: IEditInfo): Observable<IEditInfo> {
+    debugger;
     return this.http
       .post<IEditInfo>(
         'https://localhost:7132/UserAccount/editProfile',

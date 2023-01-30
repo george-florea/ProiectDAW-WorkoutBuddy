@@ -8,25 +8,18 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatListModule} from '@angular/material/list';
-import { ExercisesComponent } from './shared/exercises.component';
-import { SplitsComponent } from './shared/splits.component';
 import {MatToolbarModule} from '@angular/material/toolbar';
-import { PendingExercisesComponent } from './pendingExercises/pending-exercises.component';
 import { HttpClientModule } from '@angular/common/http';
-import { ExerciseCardComponent } from './pendingExercises/exercise-card.component';
 import {MatButtonModule} from '@angular/material/button';
-import { UserProfileComponent } from './userAccount/userProfile/user-profile.component';
-import { EditProfileComponent } from './userAccount/editProfile/edit-profile.component';
 import { UserAccountModule } from './userAccount/user-account.module';
+import { StoreModule } from '@ngrx/store';
+import { PendingExercisesModule } from './pendingExercises/pending-exercises.module';
+import { EffectsModule } from '@ngrx/effects';
 
 
 @NgModule({
   declarations: [
-    AppComponent,
-    ExercisesComponent,
-    SplitsComponent,
-    PendingExercisesComponent,
-    ExerciseCardComponent,
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -38,7 +31,10 @@ import { UserAccountModule } from './userAccount/user-account.module';
     MatToolbarModule,
     HttpClientModule,
     MatButtonModule,
-    UserAccountModule
+    UserAccountModule,
+    PendingExercisesModule,
+    StoreModule.forRoot({}),
+    EffectsModule.forRoot([])
   ],
   providers: [],
   bootstrap: [AppComponent]

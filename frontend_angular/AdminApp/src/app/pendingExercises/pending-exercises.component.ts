@@ -1,22 +1,33 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { Observable, Subscriber, Subscription } from 'rxjs';
 import { IActionHandler } from './IActionHandler';
 import { IExercise } from './IExercise';
 import { PendingExercisesService } from './pending-exercises.service';
+import * as actions from './state/pending-exercises.actions';
+import {
+  getExercises,
+} from './state/pending-exercises.reducer';
 
 @Component({
   templateUrl: './pending-exercises.component.html',
   styleUrls: ['./pending-exercises.component.css'],
 })
 export class PendingExercisesComponent implements OnInit, OnDestroy {
-  constructor(private service: PendingExercisesService) {}
+  constructor(
+    private store: Store<any>
+  ) {}
 
   sub$!: Subscription;
-  exercises: IExercise[] = []
+  exercises:IExercise[] = [];
 
-  ngOnInit(){
-    this.sub$ = this.service.updatedPendingExercises$.subscribe({
-      next: exercises => this.exercises = exercises,
+  ngOnInit() {
+    this.store.dispatch(actions.getPendingExercises());
+
+    this.sub$ = this.store.select(getExercises).subscribe({
+      next: (exercises) => {
+        this.exercises = exercises;
+      },
     });
   }
 
@@ -25,18 +36,10 @@ export class PendingExercisesComponent implements OnInit, OnDestroy {
   }
 
   actionHandler(actionObject: IActionHandler): void {
-      if (actionObject.isApproved) {
-        this.service
-          .approveExercise(actionObject.exerciseId)
-          .subscribe({
-            error: err => location.href = 'https://localhost:3000'
-          });
-      } else {
-        this.service
-          .deleteExercise(actionObject.exerciseId)
-          .subscribe((res) => console.log(res));
-      }
-      this.service.updateExercise(actionObject.exerciseId);
-    
+    if (actionObject.isApproved) {
+      this.store.dispatch(actions.ApproveExercise({exerciseId: actionObject.exerciseId}))
+    } else {
+      this.store.dispatch(actions.DeleteExercise({exerciseId: actionObject.exerciseId}))
+    }
   }
 }

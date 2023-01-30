@@ -9,6 +9,10 @@ import { AppRoutingModule } from '../app-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { accountReducer } from './store/account.reducer';
+import { AccountEffects } from './store/account.effects';
 
 @NgModule({
   declarations: [UserProfileComponent, EditProfileComponent],
@@ -20,7 +24,9 @@ import {MatInputModule} from '@angular/material/input';
     AppRoutingModule,
     ReactiveFormsModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    StoreModule.forFeature('account', accountReducer),
+    EffectsModule.forFeature([AccountEffects])
   ]
 })
 export class UserAccountModule { }
