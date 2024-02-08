@@ -88,7 +88,7 @@ namespace Backend.WebApp.Controllers
 
         [HttpPost("editProfile")]
         [Authorize]
-        public async Task<IActionResult> EditProfile(EditProfileModel model)
+        public IActionResult EditProfile(EditProfileModel model)
         {
              _service.EditProfile(model, CurrentUser.Id);
             /*if (newUsername != CurrentUser.Username)

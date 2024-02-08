@@ -8,7 +8,7 @@ import ExercisesLayout from "./pages/exercises/ExercisesLayout";
 import ExercisesList from "./pages/exercises/ExercisesList";
 import InsertExercise from "./pages/exercises/InsertExercise";
 import ViewExercise from "./pages/exercises/ViewExercise";
-import MainPage from "./pages/MainPage";
+import MainPage from "./pages/main/MainPage";
 import InsertSplit from "./pages/splits/InsertSplit";
 import SplitsList from "./pages/splits/SplitsList";
 import ViewSplit from "./pages/splits/ViewSplit";
@@ -21,9 +21,7 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: (
-          <PrivateRoute>
             <MainPage />
-          </PrivateRoute>
         ),
       },
       {

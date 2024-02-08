@@ -1,28 +1,31 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Flex,
-  Avatar,
   HStack,
   Link,
   IconButton,
   Button,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuDivider,
   useDisclosure,
   useColorModeValue,
   Stack,
+  Heading,
+  Grid,
+  GridItem,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { accountActions } from "../../store/reducers/account";
-import axios from "axios";
-const Links = ["Home", "Splits", "Exercises"];
+import { RootState } from "../../store";
+import MenuAuthenticatedUser from "./Menu";
 
-const NavLink = ({ children }) => {
+const Links = [
+  { text: "Home", path: "/" },
+  { text: "Splits", path: "/splits" },
+  { text: "Exercises", path: "/exercises" },
+];
+
+const NavLink = ({ children, path }) => {
   return (
     <Link
       px={2}
@@ -32,7 +35,7 @@ const NavLink = ({ children }) => {
         textDecoration: "none",
         bg: useColorModeValue("gray.200", "gray.700"),
       }}
-      href={"/" + children.toLowerCase()}
+      href={path}
     >
       {children}
     </Link>
@@ -50,16 +53,16 @@ export default function Header() {
 
   const logoutHandler = () => {
     dispatcher(accountActions.signOut());
-    location.href = "/login";
+    window.location.href = "/login";
   };
 
   useEffect(() => {
     const token = sessionStorage.getItem("token");
-    setJwtToken(token);
     if (token) {
+      setJwtToken(token);
       setIsLoggedIn(true);
       setUsername(sessionStorage.getItem("username") ?? "User");
-      setisAdmin(sessionStorage.getItem("roles").includes("Admin"));
+      setisAdmin(sessionStorage.getItem("roles")?.includes("Admin") || false);
     } else {
       setIsLoggedIn(false);
     }
@@ -67,9 +70,20 @@ export default function Header() {
 
   return (
     <>
-      <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
-        {isLoggedIn ? (
-          <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
+      <Box >
+        <Box textAlign={"center"} bg={"primary"} py={2}>
+          Welcome to the best fitness app!
+        </Box>
+        <Flex justify={"center"} py={6}>
+          <Heading _hover={{ textDecoration: "none" }}>Workout Buddy</Heading>
+        </Flex>
+        <Grid
+          gridTemplateColumns={"repeat(12, 1fr);"}
+          px={{ md: 8, base: 2 }}
+          py={4}
+          bg={"rgba(0, 0, 0, 0.1)"}
+        >
+          <GridItem colSpan={8}>
             <IconButton
               size={"md"}
               icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
@@ -77,118 +91,83 @@ export default function Header() {
               display={{ md: "none" }}
               onClick={isOpen ? onClose : onOpen}
             />
-            <HStack spacing={8} alignItems={"center"}>
-              <Box>Workout Buddy</Box>
+            <HStack
+              spacing={8}
+              alignItems={"center"}
+              marginBottom={{ base: "10px", xl: 0 }}
+              flexBasis={{ base: "100%", xl: "0" }}
+              justifyContent={{ base: "center", xl: "start" }}
+            >
               <HStack
                 as={"nav"}
                 spacing={4}
                 display={{ base: "none", md: "flex" }}
+                justifyItems="center"
               >
                 {Links.map((link) => (
-                  <NavLink key={link}>{link}</NavLink>
+                  <NavLink key={link.text} path={link.path}>
+                    {link.text}
+                  </NavLink>
                 ))}
                 {isAdmin && (
                   <Link
-                    px={2}
-                    py={1}
-                    rounded={"md"}
-                    _hover={{
-                      textDecoration: "none",
-                      bg: useColorModeValue("gray.200", "gray.700"),
-                    }}
-                    href={`http://localhost:4200/pending-exercises?token=${jwtToken}`}
-                  >
-                    Pending Exercises
-                  </Link>
+                  px={2}
+                  py={1}
+                  rounded={"md"}
+                  _hover={{
+                    textDecoration: "none",
+                    bg: useColorModeValue("gray.200", "gray.700"),
+                  }}
+                  href={`http://localhost:4200/pending-exercises?token=${jwtToken}`}
+                >
+                  Pending Exercises
+                </Link>
                 )}
               </HStack>
             </HStack>
-            <Flex alignItems={"center"}>
-              <>Hello, </>
-              <Menu>
-                <MenuButton
-                  as={Button}
-                  rounded={"full"}
-                  variant={"link"}
-                  cursor={"pointer"}
-                  minW={0}
-                >
-                  <p>{username}</p>
-                </MenuButton>
-                <MenuList>
-                  <MenuItem>
+          </GridItem>
+
+          <GridItem colSpan={4}>
+            <Flex alignItems={"center"} justifyContent={"end"} flexBasis="30%">
+              {isLoggedIn ? (
+                <MenuAuthenticatedUser
+                  username={username}
+                  logoutHandler={logoutHandler}
+                  jwt={jwtToken}
+                />
+              ) : (
+                <HStack spacing={3}>
+                  <Button fontSize={"sm"} fontWeight={400} variant={"link"}>
+                    <Link href="/login">Sign In</Link>
+                  </Button>
+                  <Button
+                    display={{ base: "none", md: "inline-flex" }}
+                    fontSize={"sm"}
+                    fontWeight={600}
+                    // colorScheme={colors.primaryScheme}
+                  >
                     <Link
-                      px={2}
-                      py={1}
-                      rounded={"md"}
+                      href="/register"
                       _hover={{
                         textDecoration: "none",
-                        bg: useColorModeValue("gray.200", "gray.700"),
                       }}
-                      href={`http://localhost:4200/user-profile?token=${jwtToken}`}
                     >
-                      My profile
+                      Sign Up
                     </Link>
-                  </MenuItem>
-                  <MenuItem>
-                  <Link
-                      px={2}
-                      py={1}
-                      rounded={"md"}
-                      _hover={{
-                        textDecoration: "none",
-                        bg: useColorModeValue("gray.200", "gray.700"),
-                      }}
-                      href={`http://localhost:4200/edit-profile?token=${jwtToken}`}
-                    >
-                      Edit profile
-                    </Link></MenuItem>
-                  <MenuItem>Change password</MenuItem>
-                  <MenuItem>Edit weight</MenuItem>
-                  <MenuDivider />
-                  <MenuItem onClick={logoutHandler}>Sign Out</MenuItem>
-                </MenuList>
-              </Menu>
+                  </Button>
+                </HStack>
+              )}
             </Flex>
-          </Flex>
-        ) : (
-          <Flex alignItems={"flex-end"} justifyContent={"space-between"}>
-            <Stack
-              flex={{ base: 1, md: 0 }}
-              justify={"flex-end"}
-              direction={"row"}
-              spacing={6}
-            >
-              <Button
-                as={"a"}
-                fontSize={"sm"}
-                fontWeight={400}
-                variant={"link"}
-                href="/login"
-              >
-                <Link href="/login">Sign In</Link>
-              </Button>
-              <Button
-                display={{ base: "none", md: "inline-flex" }}
-                fontSize={"sm"}
-                fontWeight={600}
-                color={"white"}
-                bg={"pink.400"}
-                _hover={{
-                  bg: "pink.300",
-                }}
-              >
-                <Link href="/register">Sign Up</Link>
-              </Button>
-            </Stack>
-          </Flex>
-        )}
+          </GridItem>
+        </Grid>
 
         {isOpen ? (
           <Box pb={4} display={{ md: "none" }}>
             <Stack as={"nav"} spacing={4}>
               {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
+                <NavLink key={link.text} path={link.path}>
+                  {link.text}
+                </NavLink>
               ))}
               <Link
                 px={2}
@@ -196,9 +175,9 @@ export default function Header() {
                 rounded={"md"}
                 _hover={{
                   textDecoration: "none",
-                  bg: useColorModeValue("gray.200", "gray.700"),
+                  // bg: colors.bgHover,
                 }}
-                href={`http://localhost:4200/pending-exercises?token=${jwtToken}`}
+                href={`https://localhost:4200/pending-exercises`}
               >
                 Pending Exercises
               </Link>

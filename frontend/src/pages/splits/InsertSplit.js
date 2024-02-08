@@ -94,6 +94,7 @@ export default function InsertSplit() {
     }
 
     try {
+      debugger
       await axios({
         method: "post",
         url: `https://localhost:7132/Split/insertSplit${querryString}`,

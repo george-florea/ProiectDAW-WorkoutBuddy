@@ -236,7 +236,7 @@ namespace Backend.BusinessLogic.Splits
                         split.Workouts.Add(workout);
                     }
                 }
-
+                split.IsPrivate = false;
                 var user = uow.Users.Get().FirstOrDefault(u => u.Iduser == split.Idcreator);
                 user.UserSplits.Add(new UserSplit()
                 {

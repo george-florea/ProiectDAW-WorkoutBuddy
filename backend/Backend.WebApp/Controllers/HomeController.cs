@@ -16,7 +16,7 @@ namespace Backend.WebApp.Controllers
         }
 
         [HttpGet("Get")]
-        public async Task<IActionResult> Get()
+        public IActionResult Get()
         {
             //var res = await _uow.Tests.Get().ToListAsync();
             return Ok();
